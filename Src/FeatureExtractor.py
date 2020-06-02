@@ -13,7 +13,7 @@ y_test = np.load(data_dir+'y_test.npy')
 mfcc = Sequential()
 mfcc.add(L.Reshape((1, -1)))
 mfcc.add(Melspectrogram(padding='same', sr=16000, n_mels=39, n_dft = 1024,
-                        power_melgram=1.0, return_decibel_melgram=True,
+                        power_melgram=2.0, return_decibel_melgram=True,
                         trainable_fb=False, trainable_kernel=False,
                         name='mel_stft'))
 mfcc.add(Normalization2D(str_axis='freq'))
