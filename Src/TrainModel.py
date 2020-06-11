@@ -6,18 +6,23 @@ from tensorflow.keras.models import Sequential,Model
 from tensorflow.keras import layers as L
 from tensorflow.keras import backend as K
 
+# Set seeds to reproduce the results
 os.environ['PYTHONHASHSEED']='123'
 np.random.seed(123)
 random.seed(123)
 tf.random.set_seed(123)
 
+# Change working directory to data_dir
 data_dir = '../Data/Pradeep_16'
+os.chdir(data_dir)
 
-x_train = np.load(data_dir+'mfcc_train.npy')
-y_train = np.load(data_dir+'y_train.npy')
-x_test = np.load(data_dir+'mfcc_test.npy')
-y_test = np.load(data_dir+'y_test.npy')
+# Load the data from saved numpy files
+x_train = np.load('mfcc_train.npy')
+y_train = np.load('y_train.npy')
+x_test = np.load('mfcc_test.npy')
+y_test = np.load('y_test.npy')
 
+# Build the attention model
 def AttentionModel(sr=16000, iLen=25000):
     
     inputs = L.Input(x_train.shape[1:], name='Input')
@@ -50,6 +55,9 @@ def AttentionModel(sr=16000, iLen=25000):
 model = AttentionModel()
 model.compile(optimizer=tf.keras.optimizers.Adam(), loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
 
+# Train the model 
 model.fit(x_train,y_train,validation_data=(x_test,y_test),verbose=1,epochs=5,shuffle=True,batch_size=5)
 
+# Save the model
+os.chdir('../..')
 model.save("model.h5")
