@@ -80,6 +80,7 @@ Kapre is a python package that provides layers for audio processing that are com
     \item \textbf{sparse\_categorical\_crossentropy} is used as \textbf{Loss} because only output which should be 1 is given instead of One Hot Encoding.
     \item \textbf{sparse\_categorical\_accuracy} is used as performance \textbf{Metric} for the above reason.
     \item \textbf{Adam} is used as \textbf{Optimizer}. Adam is adaptive learning rate optimization algorithm. This is shown to achieve a faster convergence because of having all the features of other optimization algorithms.
+    \item Batch size of 15 is used
 \end{itemize}
 
 \subsection{Notations}
@@ -194,14 +195,40 @@ You can have a overall look at the architecture of the model in Fig [\ref{fig: A
     = $SoftMax(Weights \times FC + Bias)$
     
 \end{enumerate}    
-After an input passes through the layers, the training happens by principle of Back Propagating Loss or Gradients calculated by Sparse Categorical Cross-Entropy and updating weights using the Adam Optimizer update equations.                                 
-
+After an input passes through the layers, the training happens by principle of Back Propagating Loss or Gradients calculated by Sparse Categorical Cross-Entropy and updating weights using the Adam Optimizer update equations.   
 
 \section{Training}
+
+\subsection{Back Propagation}
+Back propagation is the algorithm used to calculate the gradient of loss w.r.t all the parameters in the neural network. Gradient of Loss w.r.t parameter is the direction in which the parameter should move such that decrease in loss will be maximum. This algorithm uses the property of differentiation called chain rule. This algorithm is based on dynamic programming hence removes any redundant calculations of intermediate gradients.\\
+Each layer and function is programmed to calculate the gradient of loss w.r.t it's trainable parameters and input given the input and gradient of loss w.r.t its output.\\
+Gradient of loss w.r.t input of the current layer or function is back propagated as gradient of loss w.r.t output of previous layer or function. Hence, the name back propagation.
+
+\subsection{Adam Optimizer}
+Back propagation calculates the gradient of loss w.r.t each parameter. But a adaptive learning rate algorithm will be used to update the weights in a more calculated manner.\\
+Unlike SGD, Adam maintains few training parameters independently for each network parameter while SGD only has a single learning rate parameter for all the weights of the network. Adam is a combination of AdaGrad and RMSProp (Two other optimization algorithms).\\
+RMSProp uses only Average first moment (running average of the gradient) while Adam also uses Average second moment (running average of the square of gradient ) in the learning rate calculation.\\
+For each network parameter, Adam maintains 
 \begin{itemize}
-    \item Batch size around 15 is found optimal.
-    \item Often convergence is achieved in less than 5 epochs.
+    \item \textbf{Alpha}
+    Also referred to as the learning rate or step size. 
+    Proportion of the update to be added to the weight.
+    \item \textbf{Beta1}
+    The exponential decay rate for the first moment estimates (e.g. 0.9).
+    \item \textbf{Beta2}
+    The exponential decay rate for the second-moment estimates (e.g. 0.999)
+    \item \textbf{Epsilon}
+    Is a very small number to prevent any division by zero in the implementation (e.g. 10E-8)
 \end{itemize}
+
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\columnwidth]{./Figs/Adam.eps}
+\caption{ Adam algorithm}.
+\label{fig: Adam}	
+\end{figure}
+
 
 \section{Testing}
 \begin{enumerate}
